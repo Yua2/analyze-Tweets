@@ -15,12 +15,9 @@ def main():
     # ツイートの取得
     api = tweepy.API(auth)
     search_word = 'ワールドカップ'
-    tweets = api.search_tweets(q = search_word, count=100, lang='ja')
-
-    tweet_list = []
-    for tweet in tweets:
-        tweet_list.append(tweet.text.replace('\n', ''))
-
+    tweets = tweepy.Cursor(api.search_tweets, q = search_word, lang='ja').items(1000)
+    tweet_list = [tweet.text.replace('\n', '。') for tweet in tweets]
+    
     df = pd.DataFrame(tweet_list)
     df.to_csv('./data/tweets.csv', encoding='utf-8', header=None, index=False)
 
